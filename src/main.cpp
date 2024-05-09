@@ -32,8 +32,8 @@ int voltage2 = 35;
 int current1 = 32;
 int current2 = 33;
 
-int Relay1 = 13;
-int Relay2 = 12;
+int Relay1 = 27;
+int Relay2 = 26;
 
 
 void wifi_init(){
@@ -146,17 +146,17 @@ void loop() {
       }
       else{
         Serial.println("NO Data Received");
-      }
+      } 
 
      if(Firebase.RTDB.getInt(&fbdo, "Relay/relay2")){
       if (fbdo.dataType()=="int"){
         int Relay_status = fbdo.intData();
         if (Relay_status == 1){
-          digitalWrite(Relay2, HIGH);
+          digitalWrite(Relay2, LOW);
           Serial.println("Relay2 is ON");
         }
         else if (Relay_status ==0) {
-          digitalWrite(Relay2, LOW);
+          digitalWrite(Relay2, HIGH);
           Serial.println("Relay2 is OFF");
         }
       }
