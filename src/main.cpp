@@ -62,8 +62,6 @@ void Firebase_Config(){
   config.token_status_callback  = tokenStatusCallback;
   Firebase.begin(&config,&auth);
   Firebase.reconnectWiFi(true);
-
-
 }
 
 float Voltage_Calibrate(float data){
@@ -83,8 +81,9 @@ void Data_send_to_firebse (float data , const char* Path, const char*value){
   if (Firebase.RTDB.setFloat(&fbdo, Path ,data)){
       Serial.println();
       Serial.print(data);
+      Serial.print(" ");
       Serial.print(value);
-      Serial.print(" -> Data Sent Successfull");    
+      Serial.println(" -> Data Sent Successfull");    
     }
     else{
       Serial.println();
@@ -94,21 +93,6 @@ void Data_send_to_firebse (float data , const char* Path, const char*value){
     }
 }
 
-void Switching_relay (int relay ,const char* Path){
-  if(Firebase.RTDB.getBool(&fbdo, Path)){
-      if (fbdo.dataType()=="boolean"){
-        int Relay_status = fbdo.boolData();
-        if (Relay_status == 1){
-          digitalWrite(relay, HIGH);
-        }
-        else{
-          digitalWrite(relay, LOW);
-        }
-      }
-
-    }
-
-}
 
 void setup() {
   // put your setup code here, to run once:
@@ -145,9 +129,41 @@ void loop() {
     current1_data = Current_Calibrate(current2_data );
     Data_send_to_firebse (current2_data , "SensorReading/current2","current2");
 
-    Switching_relay (Relay1 , "/Relay/relay1");
-    Switching_relay (Relay2 , "/Relay/relay2");
+  
+  
+  
+  if(Firebase.RTDB.getInt(&fbdo, "Relay/relay1")){
+      if (fbdo.dataType()=="int"){
+        int Relay_status = fbdo.intData();
+        if (Relay_status == 1){
+          digitalWrite(Relay1, HIGH);
+          Serial.println(" Relay1 is ON");
+        }
+        else if (Relay_status ==0) {
+          digitalWrite(Relay1, LOW);
+          Serial.println("Relay1 is OFF");
+        }
+      }
+      else{
+        Serial.println("NO Data Received");
+      }
+
+    if(Firebase.RTDB.getInt(&fbdo, "Relay/relay2")){
+      if (fbdo.dataType()=="int"){
+        int Relay_status = fbdo.intData();
+        if (Relay_status == 1){
+          digitalWrite(Relay2, HIGH);
+          Serial.println("Relay2 is ON");
+        }
+        else if (Relay_status ==0) {
+          digitalWrite(Relay2, LOW);
+          Serial.println("Relay2 is OFF");
+        }
+      }
+      else{
+        Serial.println("NO Data Received");
+      }
+    }
+  }
   }
 }
-
-
