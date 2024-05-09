@@ -132,15 +132,15 @@ void loop() {
   
   
   
-  if(Firebase.RTDB.getInt(&fbdo, "Relay/relay1")){
+    if(Firebase.RTDB.getInt(&fbdo, "Relay/relay1")){
       if (fbdo.dataType()=="int"){
         int Relay_status = fbdo.intData();
         if (Relay_status == 1){
-          digitalWrite(Relay1, HIGH);
+          digitalWrite(Relay1, LOW);
           Serial.println(" Relay1 is ON");
         }
         else if (Relay_status ==0) {
-          digitalWrite(Relay1, LOW);
+          digitalWrite(Relay1, HIGH);
           Serial.println("Relay1 is OFF");
         }
       }
@@ -148,7 +148,7 @@ void loop() {
         Serial.println("NO Data Received");
       }
 
-    if(Firebase.RTDB.getInt(&fbdo, "Relay/relay2")){
+     if(Firebase.RTDB.getInt(&fbdo, "Relay/relay2")){
       if (fbdo.dataType()=="int"){
         int Relay_status = fbdo.intData();
         if (Relay_status == 1){
